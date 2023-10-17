@@ -1,4 +1,4 @@
-package main.java.obanyan.dbnyans.security;
+package obanyan.dbnyans.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +17,33 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class Sample3AuthConfiguration {
   /**
+   * 認可処理に関する設定（認証されたユーザがどこにアクセスできるか）
+   *
+   * @param http
+   * @return
+   * @throws Exception
+   */
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.formLogin(login -> login
+        .permitAll())
+        .logout(logout -> logout
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/")) // ログアウト後に / にリダイレクト
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers(AntPathRequestMatcher.antMatcher("/sample4/**"))
+            .authenticated() // /sample4/以下は認証済みであること
+            .requestMatchers(AntPathRequestMatcher.antMatcher("/**"))
+            .permitAll())// 上記以外は全員アクセス可能
+        .csrf(csrf -> csrf
+            .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/*")))
+        .headers(headers -> headers
+            .frameOptions(frameOptions -> frameOptions
+                .sameOrigin()));
+    return http.build();
+  }
+
+  /**
    * 認証処理に関する設定（誰がどのようなロールでログインできるか）
    *
    * @return
@@ -31,7 +58,7 @@ public class Sample3AuthConfiguration {
     // $ sshrun htpasswd -nbBC 10 user1 p@ss
 
     UserDetails user1 = User.withUsername("user1")
-        .password("{bcrypt}$2y$10$ngxCDmuVK1TaGchiYQfJ1OAKkd64IH6skGsNw1sLabrTICOHPxC0e").roles("USER").build();
+        .password("{bcrypt}$2y$10$8xoSLyTZuisD/54OlKELwOl.2rxBv88lyk8yaPWQxDuPRVHiduERW").roles("USER").build();
     UserDetails user2 = User.withUsername("user2")
         .password("{bcrypt}$2y$10$ngxCDmuVK1TaGchiYQfJ1OAKkd64IH6skGsNw1sLabrTICOHPxC0e").roles("USER").build();
     UserDetails admin = User.withUsername("admin")
