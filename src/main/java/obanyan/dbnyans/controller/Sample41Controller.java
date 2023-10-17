@@ -72,4 +72,9 @@ public class Sample41Controller {
     // System.out.println("ID:" + chamber3.getId());
     return "sample43.html";
   }
+
+  @GetMapping("step5")
+  public String sample45() {
+    return "sample45.html";
+  }
 }
