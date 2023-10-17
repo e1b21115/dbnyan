@@ -84,4 +84,9 @@ public class Sample41Controller {
     model.addAttribute("chambers5", chambers5);
     return "sample45.html";
   }
+
+  @GetMapping("step6")
+  public String sample46() {
+    return "sample46.html";
+  }
 }
