@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import obanyan.dbnyans.model.Chamber;
 import obanyan.dbnyans.model.ChamberMapper;
-//import obanyan.dbnyans.model.ChamberUser;
+import obanyan.dbnyans.model.ChamberUser;
 //import obanyan.dbnyans.model.UserInfo;
 
 @Controller
@@ -87,6 +87,14 @@ public class Sample41Controller {
 
   @GetMapping("step6")
   public String sample46() {
+    return "sample46.html";
+  }
+
+  @GetMapping("step7")
+  @Transactional
+  public String sample47(ModelMap model) {
+    ArrayList<ChamberUser> chamberUsers7 = chamberMapper.selectAllChamberUser();
+    model.addAttribute("chamberUsers7", chamberUsers7);
     return "sample46.html";
   }
 }
